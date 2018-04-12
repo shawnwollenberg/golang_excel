@@ -12,9 +12,16 @@ import (
 )
 
 func cTime(t string) string {
+	//t := time.Now()
 	sHold := strings.Split(t, "/")
 	return (sHold[2] + "_" + ("0" + sHold[1])[0:2] + "_" + ("0" + sHold[0])[0:2])
 }
+func excelDate(excelNum int) string {
+	startDate := time.Date(1900, 1, 1, 0, 0, 0, 0, time.UTC)
+	finalDt := startDate.AddDate(0, 0, excelNum)
+	return finalDt.Format("2006-01-02")
+}
+
 func finalTime(t string) string {
 	sHold := strings.Split(t, "/")
 	sDay := "0" + sHold[1]
@@ -70,7 +77,7 @@ func Create(s itemInfo) {
 	return
 }
 func main() {
-	searchDir := "C:\\test"
+	searchDir := "C:\\Test"
 	files, err := ioutil.ReadDir(searchDir)
 	if err != nil {
 		log.Fatal(err)
@@ -120,6 +127,7 @@ func main() {
 			}
 		}
 	}
+
 	var file *xlsx.File
 	var row *xlsx.Row
 	var cell *xlsx.Cell
@@ -165,7 +173,9 @@ func main() {
 		cell = row.AddCell()
 		cell.Value = db[i].CurTime
 		cell = row.AddCell()
-		cell.Value = db[i].QuoteDt
+		holdDt1, _ := strconv.Atoi(db[i].QuoteDt)
+		holdDt := excelDate(holdDt1)
+		cell.Value = holdDt
 		cell = row.AddCell()
 		cell.Value = db[i].SE
 		cell = row.AddCell()
